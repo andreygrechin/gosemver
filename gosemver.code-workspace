@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"golangci",
+			"goreleaser",
+			"gosec",
+			"gosemver",
+			"govulncheck",
+			"prerel",
+			"staticcheck"
+		],
+		"cSpell.ignorePaths": [
+			"package-lock.json",
+			".aider.chat.history.md",
+		]
+	}
+}

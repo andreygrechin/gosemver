@@ -1,0 +1,12 @@
+[project]
+name = "gosemver"
+version = "0.1.0"
+description = "Semver developer dependencies"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "aider-chat>=0.70.0",
+]

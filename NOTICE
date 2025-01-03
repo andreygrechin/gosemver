@@ -1,0 +1,2 @@
+This software is inspired by the work of François Saint-Jacques (https://github.com/fsaintjacques/semver-tool) and
+transpiled to Golang. The original project is licensed under the Apache License Version 2.0.
