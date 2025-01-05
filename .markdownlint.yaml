@@ -1,0 +1,11 @@
+# Default state for all rules
+default: true
+
+no-inline-html:
+  allowed_elements:
+    - details
+    - summary
+
+line-length:
+  code_blocks: false
+  line_length: 100

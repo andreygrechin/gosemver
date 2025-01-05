@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"addgroup",
+			"adduser",
+			"GOARCH",
+			"gofmt",
+			"golangci",
+			"golint",
+			"goreleaser",
+			"gosec",
+			"gosemver",
+			"govulncheck",
+			"ldflags",
+			"nonroot",
+			"staticcheck"
+		],
+		"cSpell.ignorePaths": [
+			".aider.chat.history.md",
+		]
+	}
+}
