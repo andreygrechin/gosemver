@@ -44,15 +44,14 @@ RUN CGO_ENABLED=0 GOARCH=${GOARCH} GOOS=${GOOS} go build \
     -o "/app/${APP_NAME}"
 
 # Final stage
-FROM alpine:3.21
+FROM alpine:3.21.0
 ARG APP_NAME
 
-WORKDIR /app
 COPY --from=build-stage /app/${APP_NAME} /app/${APP_NAME}
-COPY entrypoint.sh ./
+ENV PATH="/app:$PATH"
 
 # Setup non-root user
 RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 USER nonroot:nonroot
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD [ "gosemver", "--help" ]
