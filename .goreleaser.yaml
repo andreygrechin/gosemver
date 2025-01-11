@@ -117,6 +117,38 @@ archives:
           group: root
           mtime: "{{ .CommitDate }}"
 
+brews:
+  - name: gosemver
+    ids:
+      - default
+    url_template: "https://github.com/andreygrechin/gosemver/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    commit_author:
+      name: Andrey Grechin
+      email: 36399892+andreygrechin@users.noreply.github.com
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    directory: Formula
+
+    homepage: "https://github.com/andreygrechin/gosemver"
+    description: A command-line utility and a library for validating, comparing, and manipulating semantic versions, fully adhering to the Semantic Versioning 2.0.0 specification.
+    license: "MIT"
+    skip_upload: true
+
+    test: |
+      system "#{bin}/gosemver version"
+
+    repository:
+      owner: andreygrechin
+      name: homebrew-tap
+      branch: update-formula-{{ .Tag }}
+      pull_request:
+        enabled: true
+        draft: true
+        base:
+          owner: andreygrechin
+          name: homebrew-tap
+          branch: main
+
 sboms:
   - artifacts: archive
 
