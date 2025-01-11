@@ -22,6 +22,18 @@ fully adhering to the [Semantic Versioning 2.0.0](https://semver.org) specificat
 go install github.com/andreygrechin/gosemver@latest
 ```
 
+### Homebrew tap
+
+You may also install the latest version of `gosemver` using the Homebrew tap:
+
+```shell
+brew install andreygrechin/homebrew-tap/gosemver
+
+# to update, run
+brew update
+brew upgrade gosemver
+```
+
 ### Containers
 
 ```shell
@@ -105,10 +117,15 @@ Increment version identifiers:
 ```shell
 $ gosemver bump major 1.2.3
 2.0.0
+<<<<<<< Updated upstream
 
 $ gosemver bump prerelease 1.2.3 --prerelease-id beta
 1.2.3-beta
 
+=======
+$ gosemver bump prerelease 1.2.3 --prerelease-id beta
+1.2.3-beta
+>>>>>>> Stashed changes
 $ gosemver bump release 1.2.3-beta.1
 1.2.3
 ```
