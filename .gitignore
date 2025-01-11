@@ -14,3 +14,8 @@ dist/
 .env
 .DS_Store
 NOTES
+
+# Python development dependencies
+pyproject.toml
+uv.lock
+.python-version
