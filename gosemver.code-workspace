@@ -18,10 +18,14 @@
 			"govulncheck",
 			"ldflags",
 			"nonroot",
+			"opencontainers",
+			"sboms",
 			"staticcheck"
 		],
 		"cSpell.ignorePaths": [
 			".aider.chat.history.md",
+			"go.mod",
+			"go.sum",
 		]
 	}
 }

@@ -1,14 +1,10 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-
-# The lines below are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/need to use them.
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
 
 version: 2
 
 project_name: gosemver
+
+force_token: github
 
 before:
   hooks:
@@ -48,14 +44,16 @@ kos:
       org.opencontainers.image.version: "{{ .Version }}"
       org.opencontainers.image.created: "{{ .CommitTimestamp }}"
       org.opencontainers.image.licenses: MIT
-      org.opencontainers.image.description: "A tool to validate, compare, diff, and extract identifiers of semantic versions."
+      org.opencontainers.image.description: >
+        A command-line utility and a library for validating, comparing, and manipulating semantic versions, fully adhering to the Semantic Versioning 2.0.0 specification.
     annotations:
       org.opencontainers.image.source: https://github.com/andreygrechin/gosemver
       org.opencontainers.image.url: https://github.com/andreygrechin/gosemver
       org.opencontainers.image.version: "{{ .Version }}"
       org.opencontainers.image.created: "{{ .CommitTimestamp }}"
       org.opencontainers.image.licenses: MIT
-      org.opencontainers.image.description: "A tool to validate, compare, diff, and extract identifiers of semantic versions."
+      org.opencontainers.image.description: >
+        A command-line utility and a library for validating, comparing, and manipulating semantic versions, fully adhering to the Semantic Versioning 2.0.0 specification.
     user: "10001:10001"
     tags:
       - latest
@@ -121,8 +119,6 @@ archives:
 
 sboms:
   - artifacts: archive
-
-force_token: github
 
 snapshot:
   version_template: "{{ incpatch .Version }}-snapshot+{{ .ShortCommit }}"
