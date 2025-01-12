@@ -20,19 +20,17 @@ func bumpExistingNumeric(existing string) string {
 // extractPrereleaseParts extracts the prefix part (could include letters, dots, hyphens)
 // and the trailing numeric part if any.
 func extractPrereleaseParts(prerelease string) (string, string) {
-	// Regex logic from the script:
-	// PREFIX_ALPHANUM='[.0-9A-Za-z-]*[.A-Za-z-]'
-	// DIGITS='[0-9][0-9]*'
-	// EXTRACT_REGEX="^(${PREFIX_ALPHANUM})*(${DIGITS})$"
-	// We can do a simpler approach in Go: loop from the end looking for digits
 	idx := -1
+
 	for i := len(prerelease) - 1; i >= 0; i-- {
 		if prerelease[i] < '0' || prerelease[i] > '9' {
 			// first non-digit from the end => i+1 is the start of numeric
 			idx = i
+
 			break
 		}
 	}
+
 	if idx == len(prerelease)-1 {
 		// no trailing digits
 		return prerelease, ""

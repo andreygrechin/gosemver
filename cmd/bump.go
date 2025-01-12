@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var newPrereleaseId string
+var newPrereleaseID string
 
 var bumpCmd = &cobra.Command{
 	Use:   "bump <semver_id> <version>",
@@ -23,15 +23,15 @@ Examples:
   gosemver bump prerelease 2.0.0 --prerelease-id beta
   gosemver bump prerelease 2.0.0-beta
 `,
-	Args: cobra.ExactArgs(2),
+	Args: cobra.ExactArgs(2), //nolint:mnd
 	Run: func(cmd *cobra.Command, args []string) {
-		semverId := args[0]
+		semverID := args[0]
 		version := args[1]
-		if semverId != "prerelease" && newPrereleaseId != "" {
+		if semverID != "prerelease" && newPrereleaseID != "" {
 			fmt.Printf("error: 'prerelease-id' flag is allowed only for the 'prerelease' SemVer identifier\n")
 			os.Exit(1)
 		}
-		semVer, err := semver.BumpSemVer(semverId, version, newPrereleaseId)
+		semVer, err := semver.BumpSemVer(semverID, version, newPrereleaseID)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 			os.Exit(1)
@@ -47,7 +47,7 @@ Examples:
 func init() {
 	rootCmd.AddCommand(bumpCmd)
 	bumpCmd.PersistentFlags().StringVarP(
-		&newPrereleaseId,
+		&newPrereleaseID,
 		"prerelease-id",
 		"p",
 		"",

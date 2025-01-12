@@ -1,4 +1,4 @@
-package semver
+package semver //nolint:testpackage
 
 import (
 	"testing"
@@ -55,6 +55,7 @@ func Test_extractPrereleaseParts(t *testing.T) {
 			if gotPrefix != tt.wantPrefix {
 				t.Errorf("extractPrereleaseParts() prefix = %v, want %v", gotPrefix, tt.wantPrefix)
 			}
+
 			if gotNumeric != tt.wantNumeric {
 				t.Errorf("extractPrereleaseParts() numeric = %v, want %v", gotNumeric, tt.wantNumeric)
 			}

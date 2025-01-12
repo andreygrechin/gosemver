@@ -39,7 +39,7 @@ lint: fmt
 
 vuln:
 	gosec ./...
-	govulncheck ./...
+	govulncheck
 
 cov-integration:
 	rm -fr "${GOCOVERDIR}" && mkdir -p "${GOCOVERDIR}"

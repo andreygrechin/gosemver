@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"strings"
@@ -12,7 +13,9 @@ func TestExitCodes(t *testing.T) {
 		// Run the actual command that might exit
 		args := strings.Split(os.Getenv("TEST_ARGS"), " ")
 		os.Args = append([]string{"gosemver"}, args...)
+
 		main()
+
 		return
 	}
 
@@ -34,9 +37,15 @@ func TestExitCodes(t *testing.T) {
 		{"unknown command", []string{"unknown"}, 1},
 	}
 
+	binaryPath, err := os.Executable()
+	if err != nil {
+		t.Fatalf("failed to get executable path: %v", err)
+	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command(os.Args[0])
+			cmd := exec.Command(binaryPath)
+
 			cmd.Env = append(os.Environ(),
 				"BE_CRASHER=1",
 				"TEST_ARGS="+strings.Join(tt.args, " "))
@@ -44,8 +53,11 @@ func TestExitCodes(t *testing.T) {
 
 			// Get the exit code
 			exitCode := 0
+
 			if err != nil {
-				if exitError, ok := err.(*exec.ExitError); ok {
+				var exitError *exec.ExitError
+
+				if errors.As(err, &exitError) {
 					exitCode = exitError.ExitCode()
 				}
 			}

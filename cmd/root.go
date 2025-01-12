@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -19,11 +20,14 @@ See also:
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
+		var exitError *exec.ExitError
+
 		fmt.Printf("error: %v\n", err)
-		if exitError, ok := err.(*exec.ExitError); ok {
+
+		if errors.As(err, &exitError) {
 			os.Exit(exitError.ExitCode())
-		} else {
-			os.Exit(1)
 		}
+
+		os.Exit(1)
 	}
 }

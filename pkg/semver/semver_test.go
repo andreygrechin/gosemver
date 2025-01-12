@@ -45,9 +45,11 @@ func TestParseSemVer(t *testing.T) {
 				t.Errorf("ParseSemVer() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if tt.wantErr {
 				return
 			}
+
 			if got.Major != tt.want.Major || got.Minor != tt.want.Minor || got.Patch != tt.want.Patch ||
 				got.Prerelease != tt.want.Prerelease || got.Build != tt.want.Build {
 				t.Errorf("ParseSemVer() = %+v, want %+v", got, tt.want)
@@ -92,6 +94,7 @@ func TestCompareSemVer(t *testing.T) {
 				t.Errorf("CompareSemVer() error = %v", err)
 				return
 			}
+
 			if got != tt.want {
 				t.Errorf("CompareSemVer(%s, %s) = %v, want %v", tt.v1, tt.v2, got, tt.want)
 			}
@@ -102,6 +105,7 @@ func TestCompareSemVer(t *testing.T) {
 				t.Errorf("CompareSemVer() error = %v", err)
 				return
 			}
+
 			if got != 0 && reverse != -got {
 				t.Errorf("CompareSemVer symmetry failed: %s vs %s: %d and %d", tt.v1, tt.v2, got, reverse)
 			}
@@ -112,7 +116,7 @@ func TestCompareSemVer(t *testing.T) {
 func TestGetSemVer(t *testing.T) {
 	tests := []struct {
 		name     string
-		semverId string
+		semverID string
 		version  string
 		want     string
 		wantErr  bool
@@ -162,11 +166,12 @@ func TestGetSemVer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.GetSemVer(tt.semverId, tt.version)
+			got, err := semver.GetSemVer(tt.semverID, tt.version)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetSemVer() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if tt.wantErr {
 				return
 			}
@@ -215,6 +220,7 @@ func TestBumpPrerelease(t *testing.T) {
 				t.Errorf("BumpPrerelease() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if got != tt.want {
 				t.Errorf("BumpPrerelease() = %v, want %v", got, tt.want)
 			}
@@ -225,7 +231,7 @@ func TestBumpPrerelease(t *testing.T) {
 func TestBumpSemVer(t *testing.T) {
 	tests := []struct {
 		name     string
-		semverId string
+		semverID string
 		version  string
 		want     *semver.SemVer
 		wantErr  bool
@@ -262,14 +268,16 @@ func TestBumpSemVer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.BumpSemVer(tt.semverId, tt.version, "")
+			got, err := semver.BumpSemVer(tt.semverID, tt.version, "")
 			if (err != nil) != tt.wantErr {
 				t.Errorf("BumpSemVer() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if tt.wantErr {
 				return
 			}
+
 			if got.Major != tt.want.Major || got.Minor != tt.want.Minor || got.Patch != tt.want.Patch ||
 				got.Prerelease != tt.want.Prerelease || got.Build != tt.want.Build {
 				t.Errorf("BumpSemVer() = %+v, want %+v", got, tt.want)
@@ -302,6 +310,7 @@ func TestDiffCommand(t *testing.T) {
 				t.Errorf("CommandDiff() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !tt.wantErr && got != tt.expectedDiff {
 				t.Errorf("CommandDiff() = %v, want %v", got, tt.expectedDiff)
 			}

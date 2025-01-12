@@ -1,32 +1,33 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"cSpell.words": [
-			"addgroup",
-			"adduser",
-			"GOARCH",
-			"GOCOVERDIR",
-			"gofmt",
-			"golangci",
-			"golint",
-			"goreleaser",
-			"gosec",
-			"gosemver",
-			"govulncheck",
-			"ldflags",
-			"nonroot",
-			"opencontainers",
-			"sboms",
-			"staticcheck"
-		],
-		"cSpell.ignorePaths": [
-			".aider.chat.history.md",
-			"go.mod",
-			"go.sum",
-		]
-	}
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "cSpell.words": [
+            "addgroup",
+            "adduser",
+            "GOARCH",
+            "GOCOVERDIR",
+            "gofmt",
+            "golangci",
+            "golint",
+            "goreleaser",
+            "gosec",
+            "gosemver",
+            "govulncheck",
+            "ldflags",
+            "nonroot",
+            "opencontainers",
+            "sboms",
+            "staticcheck"
+        ],
+        "cSpell.ignorePaths": [
+            ".aider.chat.history.md",
+            ".golangci.yaml",
+            "go.mod",
+            "go.sum",
+        ]
+    }
 }

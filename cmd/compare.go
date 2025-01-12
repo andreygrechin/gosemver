@@ -17,7 +17,7 @@ higher, 0 if equal, 1 if lower. Build identifiers of versions is always ignored.
 Examples:
   gosemver compare v0.1.2 v0.1.2-beta1
 `,
-	Args: cobra.ExactArgs(2),
+	Args: cobra.ExactArgs(2), //nolint:mnd
 	Run: func(cmd *cobra.Command, args []string) {
 		version := args[0]
 		otherVersion := args[1]

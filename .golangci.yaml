@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://golangci-lint.run/jsonschema/golangci.jsonschema.json
+linters:
+  enable-all: true
+  disable:
+    - forbidigo
+    - depguard
+    - varnamelen
+    - exhaustruct
+    - gochecknoglobals
+    - exportloopref # Deprecated
+
+linters-settings:
+  paralleltest:
+    ignore-missing: true
+    ignore-missing-subtests: true
+issues:
+  exclude-rules:
+    - linters:
+        - wsl
+      text: return statements should not be cuddled if block has more than two lines
+    - path: _test\.go
+      linters:
+        - lll
+    - linters:
+        - revive
+      text: "unused-parameter: parameter 'cmd' seems to be unused"
+    - linters:
+        - revive
+      text: "unused-parameter: parameter 'args' seems to be unused"
+    - linters:
+        - perfsprint
+      text: fmt.Sprintf can be replaced with string concatenation
+    - linters:
+        - nlreturn
+      text: return with no blank line before
+    - path: cmd\/
+      linters:
+        - gochecknoinits
