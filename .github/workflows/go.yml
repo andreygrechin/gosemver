@@ -3,9 +3,15 @@ name: Go
 
 on:
   push:
-  # branches: ["main"]
+    branches: ["main"]
+    tags: ['v*']
   pull_request:
     branches: ["main"]
+    paths:
+      - ".github/workflows/*.yml"
+      - "**/*.go"
+      - "Makefile"
+      - "go.*"
 
 jobs:
   build:
@@ -39,12 +45,3 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-    # - name: Test with Go
-    #   run: go test -json > TestResults-${{ matrix.go-version }}.json
-
-    # - name: Upload Go test results
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: Go-results-${{ matrix.go-version }}
-    #     path: TestResults-${{ matrix.go-version }}.json
