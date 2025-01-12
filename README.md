@@ -117,15 +117,10 @@ Increment version identifiers:
 ```shell
 $ gosemver bump major 1.2.3
 2.0.0
-<<<<<<< Updated upstream
 
-$ gosemver bump prerelease 1.2.3 --prerelease-id beta
-1.2.3-beta
+$ gosemver bump prerelease 1.2.3-beta1
+1.2.3-beta2
 
-=======
-$ gosemver bump prerelease 1.2.3 --prerelease-id beta
-1.2.3-beta
->>>>>>> Stashed changes
 $ gosemver bump release 1.2.3-beta.1
 1.2.3
 ```
