@@ -1,21 +1,20 @@
-# Python-generated files
+# Common
+.env
+.DS_Store
+
+# Python-related files
+.venv
 __pycache__/
 *.py[oc]
 build/
-dist/
 wheels/
 *.egg-info
-
-# Virtual environments
-.venv
-bin/
-dist/
-.aider*
-.env
-.DS_Store
-NOTES
-
-# Python development dependencies
 pyproject.toml
 uv.lock
 .python-version
+.aider*
+
+# Project
+bin/
+dist/
+covdatafiles/

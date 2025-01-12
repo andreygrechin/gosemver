@@ -6,6 +6,7 @@ COMMIT     := $(shell git rev-parse --short HEAD)
 BUILDTIME  := $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 MOD_PATH   := $(shell go list -m)
 APP_NAME   := gosemver
+GOCOVERDIR := ./covdatafiles
 
 # Build targets
 all: lint vuln test build
@@ -39,6 +40,26 @@ lint: fmt
 vuln:
 	gosec ./...
 	govulncheck ./...
+
+cov-integration:
+	rm -fr "${GOCOVERDIR}" && mkdir -p "${GOCOVERDIR}"
+	go build \
+		-ldflags \
+		"-s -w -X $(MOD_PATH)/internal/config.Version=$(VERSION) \
+		-X $(MOD_PATH)/internal/config.BuildTime=$(BUILDTIME) \
+		-X $(MOD_PATH)/internal/config.Commit=$(COMMIT)" \
+		-o bin/$(APP_NAME) \
+		-cover
+	GOCOVERDIR=$(GOCOVERDIR) bin/$(APP_NAME) version
+	GOCOVERDIR=$(GOCOVERDIR) bin/$(APP_NAME) bump major v0.1.1
+	go tool covdata percent -i=covdatafiles
+
+cov-unit:
+	rm -fr "${GOCOVERDIR}" && mkdir -p "${GOCOVERDIR}"
+	go test -coverprofile="${GOCOVERDIR}/cover.out" ./...
+	go tool cover -func="${GOCOVERDIR}/cover.out"
+	go tool cover -html="${GOCOVERDIR}/cover.out"
+	go tool cover -html="${GOCOVERDIR}/cover.out" -o "${GOCOVERDIR}/coverage.html"
 
 test:
 	go test ./...

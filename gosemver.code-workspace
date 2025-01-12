@@ -9,6 +9,7 @@
 			"addgroup",
 			"adduser",
 			"GOARCH",
+			"GOCOVERDIR",
 			"gofmt",
 			"golangci",
 			"golint",
