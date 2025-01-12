@@ -4,6 +4,7 @@ A command-line utility and a library for validating, comparing, and manipulating
 fully adhering to the [Semantic Versioning 2.0.0](https://semver.org) specification. Written in Go.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/andreygrechin/gosemver)](https://goreportcard.com/report/github.com/andreygrechin/gosemver)
+[![codecov](https://codecov.io/github/andreygrechin/gosemver/branch/classic-anteater/graph/badge.svg?token=789FTQPOB0)](https://codecov.io/github/andreygrechin/gosemver)
 
 ## Features
 
