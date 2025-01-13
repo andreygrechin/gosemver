@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/andreygrechin/gosemver/pkg/semver"
+	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ Examples:
 	Run: func(cmd *cobra.Command, args []string) {
 		semverID := args[0]
 		version := args[1]
-		fullSemver, err := semver.GetSemVer(semverID, version)
+		fullSemver, err := gosemver.GetSemVer(semverID, version)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 			os.Exit(1)

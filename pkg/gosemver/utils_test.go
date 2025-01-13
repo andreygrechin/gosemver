@@ -1,4 +1,4 @@
-package semver //nolint:testpackage
+package gosemver //nolint:testpackage
 
 import (
 	"testing"

@@ -1,28 +1,28 @@
-package semver_test
+package gosemver_test
 
 import (
 	"testing"
 
-	"github.com/andreygrechin/gosemver/pkg/semver"
+	"github.com/andreygrechin/gosemver/pkg/gosemver"
 )
 
 func TestParseSemVer(t *testing.T) {
 	tests := []struct {
 		name    string
 		version string
-		want    *semver.SemVer
+		want    *gosemver.SemVer
 		wantErr bool
 	}{
 		// Valid versions according to SemVer 2.0.0
-		{"basic version", "1.9.0", &semver.SemVer{Major: 1, Minor: 9, Patch: 0}, false},
-		{"with v prefix", "v2.0.0", &semver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
-		{"with V prefix", "V2.0.0", &semver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
-		{"with prerelease", "1.0.0-alpha", &semver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "alpha"}, false},
-		{"with build", "1.0.0+001", &semver.SemVer{Major: 1, Minor: 0, Patch: 0, Build: "001"}, false},
-		{"with prerelease and build", "1.0.0-alpha+001", &semver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "alpha", Build: "001"}, false},
-		{"complex prerelease", "1.0.0-alpha.1.beta.11", &semver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "alpha.1.beta.11"}, false},
-		{"complex build", "1.0.0+20130313144700", &semver.SemVer{Major: 1, Minor: 0, Patch: 0, Build: "20130313144700"}, false},
-		{"complex both", "1.0.0-beta.11+exp.sha.5114f85", &semver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "beta.11", Build: "exp.sha.5114f85"}, false},
+		{"basic version", "1.9.0", &gosemver.SemVer{Major: 1, Minor: 9, Patch: 0}, false},
+		{"with v prefix", "v2.0.0", &gosemver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
+		{"with V prefix", "V2.0.0", &gosemver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
+		{"with prerelease", "1.0.0-alpha", &gosemver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "alpha"}, false},
+		{"with build", "1.0.0+001", &gosemver.SemVer{Major: 1, Minor: 0, Patch: 0, Build: "001"}, false},
+		{"with prerelease and build", "1.0.0-alpha+001", &gosemver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "alpha", Build: "001"}, false},
+		{"complex prerelease", "1.0.0-alpha.1.beta.11", &gosemver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "alpha.1.beta.11"}, false},
+		{"complex build", "1.0.0+20130313144700", &gosemver.SemVer{Major: 1, Minor: 0, Patch: 0, Build: "20130313144700"}, false},
+		{"complex both", "1.0.0-beta.11+exp.sha.5114f85", &gosemver.SemVer{Major: 1, Minor: 0, Patch: 0, Prerelease: "beta.11", Build: "exp.sha.5114f85"}, false},
 
 		// Invalid versions
 		{"empty string", "", nil, true},
@@ -40,7 +40,7 @@ func TestParseSemVer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.ParseSemVer(tt.version)
+			got, err := gosemver.ParseSemVer(tt.version)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseSemVer() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -64,7 +64,7 @@ func TestCompareSemVer(t *testing.T) {
 		v1    string
 		v2    string
 		want  int
-		setup func() (*semver.SemVer, *semver.SemVer)
+		setup func() (*gosemver.SemVer, *gosemver.SemVer)
 	}{
 		// Major, minor, patch comparisons
 		{"major different", "2.0.0", "1.0.0", 1, nil},
@@ -89,7 +89,7 @@ func TestCompareSemVer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.CompareSemVer(tt.v1, tt.v2)
+			got, err := gosemver.CompareSemVer(tt.v1, tt.v2)
 			if err != nil {
 				t.Errorf("CompareSemVer() error = %v", err)
 				return
@@ -100,7 +100,7 @@ func TestCompareSemVer(t *testing.T) {
 			}
 
 			// Test symmetry: if a > b then b < a
-			reverse, err := semver.CompareSemVer(tt.v2, tt.v1)
+			reverse, err := gosemver.CompareSemVer(tt.v2, tt.v1)
 			if err != nil {
 				t.Errorf("CompareSemVer() error = %v", err)
 				return
@@ -166,7 +166,7 @@ func TestGetSemVer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.GetSemVer(tt.semverID, tt.version)
+			got, err := gosemver.GetSemVer(tt.semverID, tt.version)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetSemVer() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -215,7 +215,7 @@ func TestBumpPrerelease(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.BumpPrerelease(tt.proto, tt.existing)
+			got, err := gosemver.BumpPrerelease(tt.proto, tt.existing)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("BumpPrerelease() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -233,32 +233,32 @@ func TestBumpSemVer(t *testing.T) {
 		name     string
 		semverID string
 		version  string
-		want     *semver.SemVer
+		want     *gosemver.SemVer
 		wantErr  bool
 	}{
 		// Major version bumps
-		{"bump major basic", "major", "1.2.3", &semver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
-		{"bump major with prerelease", "major", "1.2.3-alpha", &semver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
-		{"bump major with build", "major", "1.2.3+build", &semver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
-		{"bump major complex", "major", "1.2.3-alpha+build", &semver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
+		{"bump major basic", "major", "1.2.3", &gosemver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
+		{"bump major with prerelease", "major", "1.2.3-alpha", &gosemver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
+		{"bump major with build", "major", "1.2.3+build", &gosemver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
+		{"bump major complex", "major", "1.2.3-alpha+build", &gosemver.SemVer{Major: 2, Minor: 0, Patch: 0}, false},
 
 		// Minor version bumps
-		{"bump minor basic", "minor", "1.2.3", &semver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
-		{"bump minor with prerelease", "minor", "1.2.3-beta", &semver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
-		{"bump minor with build", "minor", "1.2.3+build.123", &semver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
-		{"bump minor complex", "minor", "1.2.3-beta+build.123", &semver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
+		{"bump minor basic", "minor", "1.2.3", &gosemver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
+		{"bump minor with prerelease", "minor", "1.2.3-beta", &gosemver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
+		{"bump minor with build", "minor", "1.2.3+build.123", &gosemver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
+		{"bump minor complex", "minor", "1.2.3-beta+build.123", &gosemver.SemVer{Major: 1, Minor: 3, Patch: 0}, false},
 
 		// Patch version bumps
-		{"bump patch basic", "patch", "1.2.3", &semver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
-		{"bump patch with prerelease", "patch", "1.2.3-rc1", &semver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
-		{"bump patch with build", "patch", "1.2.3+sha.xyz", &semver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
-		{"bump patch complex", "patch", "1.2.3-rc1+sha.xyz", &semver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
+		{"bump patch basic", "patch", "1.2.3", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
+		{"bump patch with prerelease", "patch", "1.2.3-rc1", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
+		{"bump patch with build", "patch", "1.2.3+sha.xyz", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
+		{"bump patch complex", "patch", "1.2.3-rc1+sha.xyz", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
 
 		// Release version (removes prerelease and build)
-		{"bump release basic", "release", "1.2.3", &semver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
-		{"bump release with prerelease", "release", "1.2.3-alpha", &semver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
-		{"bump release with build", "release", "1.2.3+build", &semver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
-		{"bump release complex", "release", "1.2.3-alpha+build", &semver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
+		{"bump release basic", "release", "1.2.3", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
+		{"bump release with prerelease", "release", "1.2.3-alpha", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
+		{"bump release with build", "release", "1.2.3+build", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
+		{"bump release complex", "release", "1.2.3-alpha+build", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
 
 		// Error cases
 		{"invalid command", "invalid", "1.2.3", nil, true},
@@ -268,7 +268,7 @@ func TestBumpSemVer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.BumpSemVer(tt.semverID, tt.version, "")
+			got, err := gosemver.BumpSemVer(tt.semverID, tt.version, "")
 			if (err != nil) != tt.wantErr {
 				t.Errorf("BumpSemVer() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -305,7 +305,7 @@ func TestDiffCommand(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := semver.CommandDiff(tt.version1, tt.version2)
+			got, err := gosemver.CommandDiff(tt.version1, tt.version2)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CommandDiff() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -345,7 +345,7 @@ func TestValidate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := semver.SemverRegexp.MatchString(tt.version); got != tt.want {
+			if got := gosemver.SemverRegexp.MatchString(tt.version); got != tt.want {
 				t.Errorf("validate(%v) = %v, want %v", tt.version, got, tt.want)
 			}
 		})

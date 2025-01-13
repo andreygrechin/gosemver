@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/andreygrechin/gosemver/pkg/semver"
+	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ Examples:
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		version := args[0]
-		if semver.IsSemVer(version) {
+		if gosemver.IsSemVer(version) {
 			fmt.Println("valid")
 		} else {
 			fmt.Println("invalid")

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/andreygrechin/gosemver/pkg/semver"
+	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
 
@@ -31,12 +31,12 @@ Examples:
 			fmt.Printf("error: 'prerelease-id' flag is allowed only for the 'prerelease' SemVer identifier\n")
 			os.Exit(1)
 		}
-		semVer, err := semver.BumpSemVer(semverID, version, newPrereleaseID)
+		semVer, err := gosemver.BumpSemVer(semverID, version, newPrereleaseID)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 			os.Exit(1)
 		}
-		if !semver.IsSemVer(semVer.String()) {
+		if !gosemver.IsSemVer(semVer.String()) {
 			fmt.Printf("error: we get an invalid semantic version after bump: %s\n", semVer)
 			os.Exit(1)
 		}

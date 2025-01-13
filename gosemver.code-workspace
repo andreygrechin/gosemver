@@ -18,6 +18,7 @@
             "gosemver",
             "govulncheck",
             "ldflags",
+            "nolint",
             "nonroot",
             "opencontainers",
             "sboms",
