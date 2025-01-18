@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/andreygrechin/gosemver/internal/config"
+	c "github.com/andreygrechin/gosemver/internal/config"
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
@@ -16,12 +16,13 @@ var (
 )
 
 var bumpCmd = &cobra.Command{
-	Use:   "bump <semver_id> <version>",
+	Use:   "bump <semver_id> <version|->",
 	Short: "Increment a specific SemVer identifier",
 	Long: `Increment specific SemVer identifier <semver_id> of a provided semantic version <version> where
 identifier is (major|minor|patch|prerelease|build|release).
 
-'prerelease' identifier may be specified with a prerelease ID flag.
+The version can be provided either as an argument or via stdin when using '-' as the argument.
+Only one input method can be used at a time.
 
 Examples:
   gosemver bump major 0.1.2
@@ -31,26 +32,34 @@ Examples:
 	Args: cobra.ExactArgs(2), //nolint:mnd
 	Run: func(cmd *cobra.Command, args []string) {
 		semverID := args[0]
-		version := args[1]
+		version, err := gosemver.GetLastArg(*cmd, args)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error getting arguments: %v\n", err)
+			os.Exit(c.ExitOtherErrors)
+		}
+		if version == "" {
+			fmt.Fprintln(os.Stderr, "Error: empty version string")
+			os.Exit(c.ExitOtherErrors)
+		}
 		if semverID != "prerelease" && newPrereleaseID != "" {
-			fmt.Printf("error: 'prerelease' flag is allowed only for the 'prerelease' SemVer identifier\n")
-			os.Exit(config.ExitOtherErrors)
+			fmt.Fprintf(os.Stderr, "Error: 'prerelease' flag is allowed only for the 'prerelease' SemVer identifier\n")
+			os.Exit(c.ExitOtherErrors)
 		}
 		if semverID != "build" && newBuildID != "" {
-			fmt.Printf("error: 'build' flag is allowed only for the 'build' SemVer identifier\n")
-			os.Exit(config.ExitOtherErrors)
+			fmt.Fprintf(os.Stderr, "Error: 'build' flag is allowed only for the 'build' SemVer identifier\n")
+			os.Exit(c.ExitOtherErrors)
 		}
 		semVer, err := gosemver.BumpSemVer(semverID, version, newPrereleaseID, newBuildID)
 		if err != nil {
-			fmt.Printf("error: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			if errors.Is(err, gosemver.ErrInvalidVersion) {
-				os.Exit(config.ExitInvalidSemver)
+				os.Exit(c.ExitInvalidSemver)
 			}
-			os.Exit(config.ExitOtherErrors)
+			os.Exit(c.ExitOtherErrors)
 		}
 		if !gosemver.IsSemVer(semVer.String()) {
-			fmt.Printf("error: we get an invalid semantic version after bump: %s\n", semVer)
-			os.Exit(config.ExitInvalidSemver)
+			fmt.Fprintf(os.Stderr, "Error: we get an invalid semantic version after bump: %s\n", semVer)
+			os.Exit(c.ExitInvalidSemver)
 		}
 		fmt.Println(semVer)
 	},

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/andreygrechin/gosemver/internal/config"
+	c "github.com/andreygrechin/gosemver/internal/config"
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
 
 var validateCmd = &cobra.Command{
-	Use:   "validate [version|-]",
+	Use:   "validate <version|->",
 	Short: "Validate a semantic version",
 	Long: `Validate if a provided semantic version string complies with semver 2.0.0 specification. Exits with
 status 0 if valid, 1 if invalid. Prints "valid" or "invalid" to stdout.
@@ -29,21 +29,21 @@ Examples:
 		version, err := gosemver.GetLastArg(*cmd, args)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error getting arguments: %v\n", err)
-			os.Exit(config.ExitOtherErrors)
+			os.Exit(c.ExitOtherErrors)
 		}
 
 		if version == "" {
 			fmt.Fprintln(os.Stderr, "Error: empty version string")
-			os.Exit(config.ExitOtherErrors)
+			os.Exit(c.ExitOtherErrors)
 		}
 
 		if gosemver.IsSemVer(version) {
 			fmt.Println("valid")
-			os.Exit(config.ExitOK)
+			os.Exit(c.ExitOK)
 		}
 
 		fmt.Fprintln(os.Stderr, "invalid")
-		os.Exit(config.ExitInvalidSemver)
+		os.Exit(c.ExitInvalidSemver)
 	},
 }
 

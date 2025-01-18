@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/andreygrechin/gosemver/internal/config"
+	c "github.com/andreygrechin/gosemver/internal/config"
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
@@ -28,9 +28,9 @@ Examples:
 			fmt.Printf("error: %v\n", err)
 			// check if the error is ErrInvalidVersion
 			if errors.Is(err, gosemver.ErrInvalidVersion) {
-				os.Exit(config.ExitInvalidSemver)
+				os.Exit(c.ExitInvalidSemver)
 			}
-			os.Exit(config.ExitOtherErrors)
+			os.Exit(c.ExitOtherErrors)
 		}
 		fmt.Println(semVer)
 	},
