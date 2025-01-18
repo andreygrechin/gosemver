@@ -7,7 +7,7 @@ import (
 
 // bumpExistingNumeric tries to bump the numeric suffix in an existing prerelease.
 func bumpExistingNumeric(existing string) string {
-	prefix, numeric := extractPrereleaseParts(existing)
+	prefix, numeric := splitNumericSuffix(existing)
 	if numeric != "" {
 		oldNum, _ := strconv.Atoi(numeric)
 		oldNum++
@@ -17,9 +17,9 @@ func bumpExistingNumeric(existing string) string {
 	return fmt.Sprintf("%s1", prefix)
 }
 
-// extractPrereleaseParts extracts the prefix part (could include letters, dots, hyphens)
+// splitNumericSuffix extracts the prefix part (could include letters, dots, hyphens)
 // and the trailing numeric part if any.
-func extractPrereleaseParts(prerelease string) (string, string) {
+func splitNumericSuffix(prerelease string) (string, string) {
 	idx := -1
 
 	for i := len(prerelease) - 1; i >= 0; i-- {

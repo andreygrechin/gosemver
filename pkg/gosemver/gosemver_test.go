@@ -215,7 +215,7 @@ func TestBumpPrerelease(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := gosemver.BumpPrerelease(tt.proto, tt.existing)
+			got, err := gosemver.BumpNumericSuffix(tt.proto, tt.existing)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("BumpPrerelease() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -268,7 +268,7 @@ func TestBumpSemVer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := gosemver.BumpSemVer(tt.semverID, tt.version, "")
+			got, err := gosemver.BumpSemVer(tt.semverID, tt.version, "", "")
 			if (err != nil) != tt.wantErr {
 				t.Errorf("BumpSemVer() error = %v, wantErr %v", err, tt.wantErr)
 				return

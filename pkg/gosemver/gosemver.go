@@ -10,13 +10,23 @@ import (
 )
 
 var (
-	SemverRegexp = regexp.MustCompile(`^[vV]?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)` +
-		`(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?` +
-		`(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$`)
+	SemverRegexp = regexp.MustCompile(
+		`^[vV]?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)` +
+			`(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?` +
+			`(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$`,
+	)
+	PrereleaseRegexp = regexp.MustCompile(
+		`^(?:((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?$`,
+	)
+	BuildRegexp = regexp.MustCompile(
+		`^(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$`,
+	)
 
-	ErrInvalidVersion = errors.New("version does not match the semver scheme 'X.Y.Z(-PRERELEASE)(+BUILD)'")
-	ErrInvalidCommand = errors.New("unknown command")
-	ErrJSONMarshal    = errors.New("failed to marshal version to JSON")
+	ErrInvalidVersion    = errors.New("version does not match the semver scheme")
+	ErrInvalidPrerelease = errors.New("prerelease id does not match the semver scheme")
+	ErrInvalidBuild      = errors.New("build metadata does not match the semver scheme")
+	ErrInvalidCommand    = errors.New("unknown command")
+	ErrJSONMarshal       = errors.New("failed to marshal version to JSON")
 )
 
 const (
@@ -84,6 +94,20 @@ func ParseSemVer(version string) (*SemVer, error) {
 // IsSemVer checks if a string is a valid semantic version.
 func IsSemVer(version string) bool {
 	matches := SemverRegexp.FindStringSubmatch(version)
+
+	return matches != nil
+}
+
+// IsPrerelease checks if a string is a valid id for build metadata.
+func IsPrerelease(version string) bool {
+	matches := PrereleaseRegexp.FindStringSubmatch(version)
+
+	return matches != nil
+}
+
+// IsBuild checks if a string is a valid id for build metadata.
+func IsBuild(version string) bool {
+	matches := BuildRegexp.FindStringSubmatch(version)
 
 	return matches != nil
 }
@@ -180,7 +204,7 @@ func CompareSemVer(version, otherVersion string) (int, error) { //nolint:gocogni
 }
 
 // BumpSemVer bumps a version with major/minor/patch/prerelease/build/release logic.
-func BumpSemVer(semverID, version, newPrereleaseID string) (*SemVer, error) {
+func BumpSemVer(semverID, version, newPrereleaseID, newBuildID string) (*SemVer, error) { //nolint:cyclop
 	ver, err := ParseSemVer(version)
 	if err != nil {
 		return nil, err
@@ -203,14 +227,21 @@ func BumpSemVer(semverID, version, newPrereleaseID string) (*SemVer, error) {
 		ver.Prerelease = ""
 		ver.Build = ""
 	case Prerelease:
-		prereleaseID, err := BumpPrerelease(newPrereleaseID, ver.Prerelease)
+		prereleaseID, err := BumpNumericSuffix(newPrereleaseID, ver.Prerelease)
 		if err != nil {
 			return nil, err
 		}
 
 		ver.Prerelease = prereleaseID
 		ver.Build = ""
-	case "release":
+	case Build:
+		buildID, err := BumpNumericSuffix(newBuildID, ver.Build)
+		if err != nil {
+			return nil, err
+		}
+
+		ver.Build = buildID
+	case Release:
 		ver.Prerelease = ""
 		ver.Build = ""
 	default:
@@ -220,33 +251,33 @@ func BumpSemVer(semverID, version, newPrereleaseID string) (*SemVer, error) {
 	return ver, nil
 }
 
-// BumpPrerelease replicates the logic of bumping a prerelease based on a "prototype" argument.
+// BumpNumericSuffix replicates the logic of bumping a prerelease based on a "prototype" argument.
 // If prototype doesn't end in '.', it simply replaces. If it ends in '.', we bump or initialize
 // a numeric suffix. If prototype is "+." (the script's convention), it means there's no user
 // prototype, so we just bump or initialize the existing pre-release numeric field.
-func BumpPrerelease(newPrereleaseID, currentPrereleaseID string) (string, error) {
+func BumpNumericSuffix(newID, currentID string) (string, error) {
 	// If user provided a new prerelease ID => use it as is
-	if newPrereleaseID != "" {
-		return newPrereleaseID, nil
+	if newID != "" {
+		return newID, nil
 	}
 
-	// If no current prerelease => start with plain 1
-	if currentPrereleaseID == "" {
+	// If no current ID => start with plain 1
+	if currentID == "" {
 		return "1", nil
 	}
 
-	// extract prefix + numeric from existing prerelease and bump it
-	prefix, numeric := extractPrereleaseParts(currentPrereleaseID)
+	// extract prefix + numericSuffix from existing ID and bump it
+	prefix, numericSuffix := splitNumericSuffix(currentID)
 
 	// If we already have a numeric => bump it
-	if numeric != "" {
-		oldNum, _ := strconv.Atoi(numeric)
+	if numericSuffix != "" {
+		oldNum, _ := strconv.Atoi(numericSuffix)
 		oldNum++
 
 		return fmt.Sprintf("%s%d", prefix, oldNum), nil
 	}
 
-	// else no numeric => start at 1
+	// else no numeric => start at 1 adding it to the prefix
 	return fmt.Sprintf("%s1", prefix), nil
 }
 
