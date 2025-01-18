@@ -318,6 +318,68 @@ func TestDiffCommand(t *testing.T) {
 	}
 }
 
+func TestIsPrerelease(t *testing.T) {
+	tests := []struct {
+		name    string
+		version string
+		want    bool
+	}{
+		// Valid prereleases
+		{"empty string", "", true},
+		{"simple alpha", "alpha", true},
+		{"alpha with number", "alpha1", true},
+		{"number only", "123", true},
+		{"complex with dots", "alpha.1.beta.2", true},
+		{"with hyphens", "rc-1", true},
+		{"mixed case", "Alpha1", true},
+
+		// Invalid prereleases
+		{"with spaces", "alpha 1", false},
+		{"with special chars", "alpha@1", false},
+		{"with plus", "alpha+1", false},
+		{"with underscore", "alpha_1", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := gosemver.IsPrerelease(tt.version); got != tt.want {
+				t.Errorf("IsPrerelease(%v) = %v, want %v", tt.version, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsBuild(t *testing.T) {
+	tests := []struct {
+		name    string
+		version string
+		want    bool
+	}{
+		// Valid builds
+		{"empty string", "", true},
+		{"simple number", "001", true},
+		{"simple alpha", "build", true},
+		{"alpha with number", "build123", true},
+		{"with dots", "build.123", true},
+		{"with hyphens", "build-123", true},
+		{"complex", "20130313144700.exp.sha.5114f85", true},
+
+		// Invalid builds
+		{"with spaces", "build 123", false},
+		{"with special chars", "build@123", false},
+		{"with plus", "build+123", false},
+		{"with underscore", "build_123", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := gosemver.IsBuild(tt.version); got != tt.want {
+				t.Errorf("IsBuild(%v) = %v, want %v", tt.version, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestValidate(t *testing.T) {
 	tests := []struct {
 		name    string
