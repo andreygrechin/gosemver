@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/andreygrechin/gosemver/internal/config"
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
@@ -34,7 +35,7 @@ Examples:
 			input, err := reader.ReadString('\n')
 			if err != nil && err != io.EOF {
 				fmt.Fprintf(os.Stderr, "Error reading from stdin: %v\n", err)
-				os.Exit(1)
+				os.Exit(config.ExitOtherErrors)
 			}
 			version = strings.TrimSpace(input)
 		} else {
@@ -43,14 +44,14 @@ Examples:
 
 		if version == "" {
 			fmt.Fprintln(os.Stderr, "Error: empty version string")
-			os.Exit(1)
+			os.Exit(config.ExitOtherErrors)
 		}
 
 		if gosemver.IsSemVer(version) {
 			fmt.Println("valid")
 		} else {
 			fmt.Println("invalid")
-			os.Exit(1)
+			os.Exit(config.ExitInvalidSemver)
 		}
 	},
 }

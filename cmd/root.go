@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/andreygrechin/gosemver/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -28,6 +29,6 @@ func Execute() {
 			os.Exit(exitError.ExitCode())
 		}
 
-		os.Exit(1)
+		os.Exit(config.ExitOtherErrors)
 	}
 }

@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
+	"github.com/andreygrechin/gosemver/internal/config"
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
@@ -25,7 +27,11 @@ Examples:
 		semVer, err := gosemver.CommandDiff(version, otherVersion)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
-			os.Exit(1)
+			if errors.Is(err, gosemver.ErrInvalidVersion) {
+				os.Exit(config.ExitInvalidSemver)
+			} else {
+				os.Exit(config.ExitOtherErrors)
+			}
 		}
 		fmt.Println(semVer)
 	},

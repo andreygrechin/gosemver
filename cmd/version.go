@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/andreygrechin/gosemver/internal/config"
 	"github.com/spf13/cobra"
@@ -18,6 +19,7 @@ var versionCmd = &cobra.Command{
 			config.BuildTime,
 			config.Commit,
 		)
+		os.Exit(config.ExitOK)
 	},
 }
 

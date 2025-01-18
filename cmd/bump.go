@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
+	"github.com/andreygrechin/gosemver/internal/config"
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
@@ -32,20 +34,24 @@ Examples:
 		version := args[1]
 		if semverID != "prerelease" && newPrereleaseID != "" {
 			fmt.Printf("error: 'prerelease' flag is allowed only for the 'prerelease' SemVer identifier\n")
-			os.Exit(1)
+			os.Exit(config.ExitOtherErrors)
 		}
 		if semverID != "build" && newBuildID != "" {
 			fmt.Printf("error: 'build' flag is allowed only for the 'build' SemVer identifier\n")
-			os.Exit(1)
+			os.Exit(config.ExitOtherErrors)
 		}
 		semVer, err := gosemver.BumpSemVer(semverID, version, newPrereleaseID, newBuildID)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
-			os.Exit(1)
+			if errors.Is(err, gosemver.ErrInvalidVersion) {
+				os.Exit(config.ExitInvalidSemver)
+			} else {
+				os.Exit(config.ExitOtherErrors)
+			}
 		}
 		if !gosemver.IsSemVer(semVer.String()) {
 			fmt.Printf("error: we get an invalid semantic version after bump: %s\n", semVer)
-			os.Exit(1)
+			os.Exit(config.ExitInvalidSemver)
 		}
 		fmt.Println(semVer)
 	},
