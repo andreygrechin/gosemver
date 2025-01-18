@@ -1,8 +1,13 @@
 package gosemver
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"strconv"
+	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 // bumpExistingNumeric tries to bump the numeric suffix in an existing prerelease.
@@ -36,4 +41,19 @@ func splitNumericSuffix(prerelease string) (string, string) {
 		return prerelease, ""
 	}
 	return prerelease[:idx+1], prerelease[idx+1:]
+}
+
+func GetLastArg(cmd cobra.Command, args []string) (string, error) {
+	if len(args) == 0 {
+		return "", fmt.Errorf("no arguments provided")
+	}
+	if args[len(args)-1] == "-" {
+		reader := bufio.NewReader(cmd.InOrStdin())
+		input, err := reader.ReadString('\n')
+		if err != nil && err != io.EOF {
+			return "", fmt.Errorf("error reading from stdin: %w", err)
+		}
+		return strings.TrimSpace(input), nil
+	}
+	return args[len(args)-1], nil
 }

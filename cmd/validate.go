@@ -1,11 +1,8 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"io"
 	"os"
-	"strings"
 
 	"github.com/andreygrechin/gosemver/internal/config"
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
@@ -29,17 +26,10 @@ Examples:
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		var version string
-
-		if args[0] == "-" {
-			reader := bufio.NewReader(cmd.InOrStdin())
-			input, err := reader.ReadString('\n')
-			if err != nil && err != io.EOF {
-				fmt.Fprintf(os.Stderr, "Error reading from stdin: %v\n", err)
-				os.Exit(config.ExitOtherErrors)
-			}
-			version = strings.TrimSpace(input)
-		} else {
-			version = args[0]
+		version, err := gosemver.GetLastArg(*cmd, args)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error getting arguments: %v\n", err)
+			os.Exit(config.ExitOtherErrors)
 		}
 
 		if version == "" {
@@ -49,10 +39,11 @@ Examples:
 
 		if gosemver.IsSemVer(version) {
 			fmt.Println("valid")
-		} else {
-			fmt.Println("invalid")
-			os.Exit(config.ExitInvalidSemver)
+			os.Exit(config.ExitOK)
 		}
+
+		fmt.Fprintln(os.Stderr, "invalid")
+		os.Exit(config.ExitInvalidSemver)
 	},
 }
 
