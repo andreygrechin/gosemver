@@ -45,9 +45,8 @@ Examples:
 			fmt.Printf("error: %v\n", err)
 			if errors.Is(err, gosemver.ErrInvalidVersion) {
 				os.Exit(config.ExitInvalidSemver)
-			} else {
-				os.Exit(config.ExitOtherErrors)
 			}
+			os.Exit(config.ExitOtherErrors)
 		}
 		if !gosemver.IsSemVer(semVer.String()) {
 			fmt.Printf("error: we get an invalid semantic version after bump: %s\n", semVer)

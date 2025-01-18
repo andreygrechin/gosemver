@@ -29,9 +29,8 @@ Examples:
 			fmt.Printf("error: %v\n", err)
 			if errors.Is(err, gosemver.ErrInvalidVersion) {
 				os.Exit(config.ExitInvalidSemver)
-			} else {
-				os.Exit(config.ExitOtherErrors)
 			}
+			os.Exit(config.ExitOtherErrors)
 		}
 		fmt.Println(semVer)
 	},

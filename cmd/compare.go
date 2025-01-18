@@ -29,9 +29,8 @@ Examples:
 			// check if the error is ErrInvalidVersion
 			if errors.Is(err, gosemver.ErrInvalidVersion) {
 				os.Exit(config.ExitInvalidSemver)
-			} else {
-				os.Exit(config.ExitOtherErrors)
 			}
+			os.Exit(config.ExitOtherErrors)
 		}
 		fmt.Println(semVer)
 	},

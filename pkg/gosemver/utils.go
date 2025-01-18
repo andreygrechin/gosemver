@@ -45,15 +45,19 @@ func splitNumericSuffix(prerelease string) (string, string) {
 
 func GetLastArg(cmd cobra.Command, args []string) (string, error) {
 	if len(args) == 0 {
-		return "", fmt.Errorf("no arguments provided")
+		return "", ErrNoArgumentsProvided
 	}
+
 	if args[len(args)-1] == "-" {
 		reader := bufio.NewReader(cmd.InOrStdin())
+
 		input, err := reader.ReadString('\n')
 		if err != nil && err != io.EOF {
 			return "", fmt.Errorf("error reading from stdin: %w", err)
 		}
+
 		return strings.TrimSpace(input), nil
 	}
+
 	return args[len(args)-1], nil
 }
