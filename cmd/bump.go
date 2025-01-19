@@ -1,44 +1,65 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
-	"github.com/andreygrechin/gosemver/pkg/semver"
+	c "github.com/andreygrechin/gosemver/internal/config"
+	"github.com/andreygrechin/gosemver/pkg/gosemver"
 	"github.com/spf13/cobra"
 )
 
-var newPrereleaseID string
+var (
+	newPrereleaseID string
+	newBuildID      string
+)
 
 var bumpCmd = &cobra.Command{
-	Use:   "bump <semver_id> <version>",
+	Use:   "bump <semver_id> <version|->",
 	Short: "Increment a specific SemVer identifier",
-	Long: `Increment specific SemVer identifier <semver_id> of a provided semantic version <version> where
-identifier is (major|minor|patch|prerelease|release).
+	Long: `Increment specific a semantic version identifier <semver_id> of a provided semantic
+version <version> where identifier is (major|minor|patch|prerelease|build|release).
 
-'prerelease' identifier may be specified with a prerelease ID flag.
+The version can be provided either as an argument or via stdin when using '-' as the argument.
+Only one input method can be used at a time.
 
 Examples:
   gosemver bump major 0.1.2
-  gosemver bump prerelease 2.0.0 --prerelease-id beta
+  gosemver bump prerelease 2.0.0 --prerelease beta
   gosemver bump prerelease 2.0.0-beta
 `,
 	Args: cobra.ExactArgs(2), //nolint:mnd
 	Run: func(cmd *cobra.Command, args []string) {
 		semverID := args[0]
-		version := args[1]
-		if semverID != "prerelease" && newPrereleaseID != "" {
-			fmt.Printf("error: 'prerelease-id' flag is allowed only for the 'prerelease' SemVer identifier\n")
-			os.Exit(1)
-		}
-		semVer, err := semver.BumpSemVer(semverID, version, newPrereleaseID)
+		version, err := gosemver.GetLastArg(*cmd, args)
 		if err != nil {
-			fmt.Printf("error: %v\n", err)
-			os.Exit(1)
+			fmt.Fprintf(os.Stderr, "Failed to get arguments: %v\n", err)
+			os.Exit(c.ExitOtherErrors)
 		}
-		if !semver.IsSemVer(semVer.String()) {
-			fmt.Printf("error: we get an invalid semantic version after bump: %s\n", semVer)
-			os.Exit(1)
+		if version == "" {
+			fmt.Fprintln(os.Stderr, "Error: version string is empty")
+			os.Exit(c.ExitOtherErrors)
+		}
+		if semverID != "prerelease" && newPrereleaseID != "" {
+			fmt.Fprintf(os.Stderr, "Error: The '--prerelease' flag can only be used with the 'prerelease' identifier\n")
+			os.Exit(c.ExitOtherErrors)
+		}
+		if semverID != "build" && newBuildID != "" {
+			fmt.Fprintf(os.Stderr, "Error: The '--build' flag can only be used with the 'build' identifier\n")
+			os.Exit(c.ExitOtherErrors)
+		}
+		semVer, err := gosemver.BumpSemVer(semverID, version, newPrereleaseID, newBuildID)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			if errors.Is(err, gosemver.ErrInvalidVersion) {
+				os.Exit(c.ExitInvalidSemver)
+			}
+			os.Exit(c.ExitOtherErrors)
+		}
+		if !gosemver.IsSemVer(semVer.String()) {
+			fmt.Fprintf(os.Stderr, "Error: we get an invalid semantic version after bump: %s\n", semVer)
+			os.Exit(c.ExitInvalidSemver)
 		}
 		fmt.Println(semVer)
 	},
@@ -48,10 +69,16 @@ func init() {
 	rootCmd.AddCommand(bumpCmd)
 	bumpCmd.PersistentFlags().StringVarP(
 		&newPrereleaseID,
-		"prerelease-id",
+		"prerelease",
 		"p",
 		"",
-		`A new prerelease ID to add or replace the existing one, valid only for the
-'prerelease' SemVer identifier`,
+		`Add or replace a new prerelease ID, valid only with the 'prerelease' SemVer identifier`,
+	)
+	bumpCmd.PersistentFlags().StringVarP(
+		&newBuildID,
+		"build",
+		"m",
+		"",
+		`Add or replace a new build metadata ID, valid only with the 'build' SemVer identifier`,
 	)
 }

@@ -1,4 +1,4 @@
-package semver //nolint:testpackage
+package gosemver //nolint:testpackage
 
 import (
 	"testing"
@@ -51,7 +51,7 @@ func Test_extractPrereleaseParts(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotPrefix, gotNumeric := extractPrereleaseParts(tt.prerelease)
+			gotPrefix, gotNumeric := splitNumericSuffix(tt.prerelease)
 			if gotPrefix != tt.wantPrefix {
 				t.Errorf("extractPrereleaseParts() prefix = %v, want %v", gotPrefix, tt.wantPrefix)
 			}

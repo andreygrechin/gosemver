@@ -1,13 +1,18 @@
-package semver
+package gosemver
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"strconv"
+	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 // bumpExistingNumeric tries to bump the numeric suffix in an existing prerelease.
 func bumpExistingNumeric(existing string) string {
-	prefix, numeric := extractPrereleaseParts(existing)
+	prefix, numeric := splitNumericSuffix(existing)
 	if numeric != "" {
 		oldNum, _ := strconv.Atoi(numeric)
 		oldNum++
@@ -17,9 +22,9 @@ func bumpExistingNumeric(existing string) string {
 	return fmt.Sprintf("%s1", prefix)
 }
 
-// extractPrereleaseParts extracts the prefix part (could include letters, dots, hyphens)
+// splitNumericSuffix extracts the prefix part (could include letters, dots, hyphens)
 // and the trailing numeric part if any.
-func extractPrereleaseParts(prerelease string) (string, string) {
+func splitNumericSuffix(prerelease string) (string, string) {
 	idx := -1
 
 	for i := len(prerelease) - 1; i >= 0; i-- {
@@ -36,4 +41,23 @@ func extractPrereleaseParts(prerelease string) (string, string) {
 		return prerelease, ""
 	}
 	return prerelease[:idx+1], prerelease[idx+1:]
+}
+
+func GetLastArg(cmd cobra.Command, args []string) (string, error) {
+	if len(args) == 0 {
+		return "", ErrNoArgumentsProvided
+	}
+
+	if args[len(args)-1] == "-" {
+		reader := bufio.NewReader(cmd.InOrStdin())
+
+		input, err := reader.ReadString('\n')
+		if err != nil && err != io.EOF {
+			return "", fmt.Errorf("error reading from stdin: %w", err)
+		}
+
+		return strings.TrimSpace(input), nil
+	}
+
+	return args[len(args)-1], nil
 }

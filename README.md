@@ -88,6 +88,7 @@ Identify the most significant difference between versions:
 ```shell
 $ gosemver diff v1.0.0 v1.1.0
 minor
+
 $ gosemver diff v1.0.0 v1.0.0-beta1
 prerelease
 ```
