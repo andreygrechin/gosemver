@@ -26,12 +26,14 @@ func TestExitCodes(t *testing.T) {
 	}{
 		{"valid version validate", []string{"validate", "1.0.0"}, 0},
 		{"invalid version validate", []string{"validate", "not.a.version"}, 1},
+		{"invalid version validate", []string{"validate", ""}, 2},
 
 		{"valid version compare", []string{"compare", "1.0.0", "2.0.0"}, 0},
 		{"invalid version compare", []string{"compare", "not.a.version", "2.0.0"}, 1},
 		{"invalid version compare", []string{"compare", "1.2.3"}, 2},
 		{"invalid version compare", []string{"compare", "1.2.3 1.2.4"}, 0},
 		{"invalid version compare", []string{"compare", "1.2.3 1.2.4", "-"}, 2},
+		{"invalid version compare", []string{"compare", ""}, 2},
 
 		{"valid version bump", []string{"bump", "major", "1.0.0"}, 0},
 		{"invalid version bump", []string{"bump", "major", "not.a.version"}, 1},
@@ -50,6 +52,7 @@ func TestExitCodes(t *testing.T) {
 		{"invalid version diff", []string{"diff", "1.2.3"}, 2},
 		{"invalid version diff", []string{"diff", "1.2.3 1.2.4"}, 0},
 		{"invalid version diff", []string{"diff", "1.2.3 1.2.4", "-"}, 2},
+		{"invalid version diff", []string{"diff", ""}, 2},
 
 		{"help command", []string{"--help"}, 0},
 

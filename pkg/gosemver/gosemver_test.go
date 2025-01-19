@@ -98,7 +98,6 @@ func TestCompareSemVer(t *testing.T) {
 			got, err := gosemver.CompareSemVer(tt.v1, tt.v2)
 			if err != nil {
 				if errors.Is(err, gosemver.ErrInvalidVersion) {
-					fmt.Println("Error is as expected")
 					return
 				}
 
@@ -446,6 +445,25 @@ func TestSemverToString(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := gosemver.ToString(tt.semverVersion); got != tt.want {
+				t.Errorf("validate(%v) = %v, want %v", tt.semverVersion, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsSemVer(t *testing.T) {
+	tests := []struct {
+		name          string
+		semverVersion string
+		want          bool
+	}{
+		{"basic version", "1.2.3", true},
+		{"basic version", "beta", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := gosemver.IsSemVer(tt.semverVersion); got != tt.want {
 				t.Errorf("validate(%v) = %v, want %v", tt.semverVersion, got, tt.want)
 			}
 		})
