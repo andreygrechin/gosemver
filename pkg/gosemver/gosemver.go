@@ -118,12 +118,12 @@ func IsBuild(version string) bool {
 func CompareSemVer(version, otherVersion string) (int, error) { //nolint:gocognit,cyclop,funlen
 	left, err := ParseSemVer(version)
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	right, err := ParseSemVer(otherVersion)
 	if err != nil {
-		return 1, err
+		return 0, err
 	}
 
 	// Compare major, minor, patch

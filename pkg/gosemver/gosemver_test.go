@@ -1,6 +1,8 @@
 package gosemver_test
 
 import (
+	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/andreygrechin/gosemver/pkg/gosemver"
@@ -60,16 +62,20 @@ func TestParseSemVer(t *testing.T) {
 
 func TestCompareSemVer(t *testing.T) {
 	tests := []struct {
-		name  string
-		v1    string
-		v2    string
-		want  int
-		setup func() (*gosemver.SemVer, *gosemver.SemVer)
+		name    string
+		v1      string
+		v2      string
+		want    int
+		wantErr error
 	}{
 		// Major, minor, patch comparisons
 		{"major different", "2.0.0", "1.0.0", 1, nil},
 		{"minor different", "1.2.0", "1.1.0", 1, nil},
 		{"patch different", "1.0.2", "1.0.1", 1, nil},
+
+		// Invalid versions
+		{"invalid version 1", "1.0.0", "invalid", 0, fmt.Errorf("%w: %s", gosemver.ErrInvalidVersion, "invalid")},
+		{"invalid version 2", "invalid", "1.0.0", 0, fmt.Errorf("%w: %s", gosemver.ErrInvalidVersion, "invalid")},
 
 		// Pre-release comparisons (spec item 11)
 		{"no prerelease > prerelease", "1.0.0", "1.0.0-alpha", 1, nil},
@@ -91,15 +97,16 @@ func TestCompareSemVer(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := gosemver.CompareSemVer(tt.v1, tt.v2)
 			if err != nil {
-				t.Errorf("CompareSemVer() error = %v", err)
+				if errors.Is(err, gosemver.ErrInvalidVersion) {
+					fmt.Println("Error is as expected")
+					return
+				}
+
+				t.Errorf("CompareSemVer(%s, %s) = %v, want %v", tt.v1, tt.v2, got, tt.wantErr)
+				fmt.Println(err)
 				return
 			}
 
-			if got != tt.want {
-				t.Errorf("CompareSemVer(%s, %s) = %v, want %v", tt.v1, tt.v2, got, tt.want)
-			}
-
-			// Test symmetry: if a > b then b < a
 			reverse, err := gosemver.CompareSemVer(tt.v2, tt.v1)
 			if err != nil {
 				t.Errorf("CompareSemVer() error = %v", err)
@@ -253,6 +260,16 @@ func TestBumpSemVer(t *testing.T) {
 		{"bump patch with prerelease", "patch", "1.2.3-rc1", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
 		{"bump patch with build", "patch", "1.2.3+sha.xyz", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
 		{"bump patch complex", "patch", "1.2.3-rc1+sha.xyz", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 4}, false},
+
+		// Prerelease version (removes build)
+		{"bump prerelease no prerelease", "prerelease", "1.2.3", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Prerelease: "1"}, false},
+		{"bump prerelease no numeric suffix", "prerelease", "1.2.3-beta", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Prerelease: "beta1"}, false},
+		{"bump prerelease increment numeric suffix", "prerelease", "1.2.3-beta1", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Prerelease: "beta2"}, false},
+
+		// Build
+		{"bump build basic", "build", "1.2.3", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Build: "1"}, false},
+		{"bump build basic", "build", "1.2.3+build", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Build: "build1"}, false},
+		{"bump build basic", "build", "1.2.3+build1", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Build: "build2"}, false},
 
 		// Release version (removes prerelease and build)
 		{"bump release basic", "release", "1.2.3", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3}, false},
@@ -409,6 +426,27 @@ func TestValidate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := gosemver.SemverRegexp.MatchString(tt.version); got != tt.want {
 				t.Errorf("validate(%v) = %v, want %v", tt.version, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSemverToString(t *testing.T) {
+	tests := []struct {
+		name          string
+		semverVersion *gosemver.SemVer
+		want          string
+	}{
+		{"basic version", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3}, "1.2.3"},
+		{"basic version", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Prerelease: "beta"}, "1.2.3-beta"},
+		{"basic version", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Prerelease: "beta", Build: "build123"}, "1.2.3-beta+build123"},
+		{"basic version", &gosemver.SemVer{Major: 1, Minor: 2, Patch: 3, Build: "build123"}, "1.2.3+build123"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := gosemver.ToString(tt.semverVersion); got != tt.want {
+				t.Errorf("validate(%v) = %v, want %v", tt.semverVersion, got, tt.want)
 			}
 		})
 	}

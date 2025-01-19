@@ -29,17 +29,32 @@ func TestExitCodes(t *testing.T) {
 
 		{"valid version compare", []string{"compare", "1.0.0", "2.0.0"}, 0},
 		{"invalid version compare", []string{"compare", "not.a.version", "2.0.0"}, 1},
+		{"invalid version compare", []string{"compare", "1.2.3"}, 2},
+		{"invalid version compare", []string{"compare", "1.2.3 1.2.4"}, 0},
+		{"invalid version compare", []string{"compare", "1.2.3 1.2.4", "-"}, 2},
+
 		{"valid version bump", []string{"bump", "major", "1.0.0"}, 0},
 		{"invalid version bump", []string{"bump", "major", "not.a.version"}, 1},
 		{"invalid version bump with prerelease flag", []string{"bump", "major", "--prerelease", "beta"}, 2},
 		{"valid version bump with prerelease flag", []string{"bump", "prerelease", "--prerelease", "beta", "1.2.3"}, 0},
 		{"invalid version bump with prerelease flag", []string{"bump", "prerelease", "--prerelease", "be++ta", "1.2.3"}, 1},
+		{"invalid version bump1", []string{"bump", "major", "-"}, 2},
+		{"invalid version bump2", []string{"bump", "major", ""}, 2},
+		{"invalid version bump2", []string{"bump", "major", "--prerelease=beta", "1.2.3"}, 2},
+		{"invalid version bump2", []string{"bump", "major", "--build=build123", "1.2.3"}, 2},
+
 		{"valid version get", []string{"get", "major", "1.0.0"}, 0},
 		{"invalid version get", []string{"get", "major", "not.a.version"}, 1},
 		{"valid version diff", []string{"diff", "v1.2.3", "1.2.4"}, 0},
 		{"invalid version diff", []string{"diff", "v1.2.3", "01"}, 1},
+		{"invalid version diff", []string{"diff", "1.2.3"}, 2},
+		{"invalid version diff", []string{"diff", "1.2.3 1.2.4"}, 0},
+		{"invalid version diff", []string{"diff", "1.2.3 1.2.4", "-"}, 2},
+
 		{"help command", []string{"--help"}, 0},
+
 		{"version command", []string{"version"}, 0},
+
 		{"unknown command", []string{"unknown"}, 2},
 	}
 
