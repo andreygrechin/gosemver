@@ -29,11 +29,11 @@ Examples:
 		semverID := args[0]
 		version, err := gosemver.GetLastArg(*cmd, args)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error getting arguments: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Failed to get arguments: %v\n", err)
 			os.Exit(c.ExitOtherErrors)
 		}
 		if version == "" {
-			fmt.Fprintln(os.Stderr, "Error: empty version string")
+			fmt.Fprintln(os.Stderr, "Error: version string is empty")
 			os.Exit(c.ExitOtherErrors)
 		}
 		fullSemver, err := gosemver.GetSemVer(semverID, version)

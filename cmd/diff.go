@@ -13,7 +13,7 @@ import (
 var diffCmd = &cobra.Command{
 	Use:   "diff <version> <other_version>",
 	Short: "Find the most significant different version identifier",
-	Long: `Find the most significant different version identifier of <version> and <other_version>,
+	Long: `Find the most significant different between <version> and <other_version> identifiers,
 output the identifier to stdout.
 
 Examples:

@@ -22,11 +22,11 @@ var (
 		`^(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$`,
 	)
 
-	ErrInvalidVersion      = errors.New("version does not match the semver scheme")
-	ErrInvalidPrerelease   = errors.New("prerelease id does not match the semver scheme")
-	ErrInvalidBuild        = errors.New("build metadata does not match the semver scheme")
+	ErrInvalidVersion      = errors.New("version does not comply with the semver spec")
+	ErrInvalidPrerelease   = errors.New("prerelease id does not comply with the semver spec")
+	ErrInvalidBuild        = errors.New("build metadata does not comply with the semver spec")
 	ErrInvalidCommand      = errors.New("unknown command")
-	ErrJSONMarshal         = errors.New("failed to marshal version to JSON")
+	ErrJSONMarshal         = errors.New("failed to convert version to JSON format")
 	ErrNoArgumentsProvided = errors.New("no arguments provided")
 )
 

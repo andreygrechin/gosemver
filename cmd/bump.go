@@ -34,19 +34,19 @@ Examples:
 		semverID := args[0]
 		version, err := gosemver.GetLastArg(*cmd, args)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error getting arguments: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Failed to get arguments: %v\n", err)
 			os.Exit(c.ExitOtherErrors)
 		}
 		if version == "" {
-			fmt.Fprintln(os.Stderr, "Error: empty version string")
+			fmt.Fprintln(os.Stderr, "Error: version string is empty")
 			os.Exit(c.ExitOtherErrors)
 		}
 		if semverID != "prerelease" && newPrereleaseID != "" {
-			fmt.Fprintf(os.Stderr, "Error: 'prerelease' flag is allowed only with the 'prerelease' SemVer identifier\n")
+			fmt.Fprintf(os.Stderr, "Error: The '--prerelease' flag can only be used with the 'prerelease' identifier\n")
 			os.Exit(c.ExitOtherErrors)
 		}
 		if semverID != "build" && newBuildID != "" {
-			fmt.Fprintf(os.Stderr, "Error: 'build' flag is allowed only with the 'build' SemVer identifier\n")
+			fmt.Fprintf(os.Stderr, "Error: The '--build' flag can only be used with the 'build' identifier\n")
 			os.Exit(c.ExitOtherErrors)
 		}
 		semVer, err := gosemver.BumpSemVer(semverID, version, newPrereleaseID, newBuildID)

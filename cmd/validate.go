@@ -12,8 +12,8 @@ import (
 var validateCmd = &cobra.Command{
 	Use:   "validate <version|->",
 	Short: "Validate a semantic version",
-	Long: `Validate if a provided semantic version string complies with semver 2.0.0 specification. Exits with
-status 0 if valid, 1 if invalid. Prints "valid" or "invalid" to stdout.
+	Long: `Validate whether a provided version string complies with the Semantic Versioning 2.0.0 specification.
+Exits with status 0 if valid, 1 if invalid. Prints "valid" or "invalid" to stdout.
 
 The version can be provided either as an argument or via stdin when using '-' as the argument.
 Only one input method can be used at a time.
@@ -28,12 +28,12 @@ Examples:
 		var version string
 		version, err := gosemver.GetLastArg(*cmd, args)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error getting arguments: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Failed to get arguments: %v\n", err)
 			os.Exit(c.ExitOtherErrors)
 		}
 
 		if version == "" {
-			fmt.Fprintln(os.Stderr, "Error: empty version string")
+			fmt.Fprintln(os.Stderr, "Error: version string is empty")
 			os.Exit(c.ExitOtherErrors)
 		}
 
