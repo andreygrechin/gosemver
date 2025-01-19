@@ -18,8 +18,8 @@ var (
 var bumpCmd = &cobra.Command{
 	Use:   "bump <semver_id> <version|->",
 	Short: "Increment a specific SemVer identifier",
-	Long: `Increment specific SemVer identifier <semver_id> of a provided semantic version <version> where
-identifier is (major|minor|patch|prerelease|build|release).
+	Long: `Increment specific a semantic version identifier <semver_id> of a provided semantic
+version <version> where identifier is (major|minor|patch|prerelease|build|release).
 
 The version can be provided either as an argument or via stdin when using '-' as the argument.
 Only one input method can be used at a time.
@@ -42,11 +42,11 @@ Examples:
 			os.Exit(c.ExitOtherErrors)
 		}
 		if semverID != "prerelease" && newPrereleaseID != "" {
-			fmt.Fprintf(os.Stderr, "Error: 'prerelease' flag is allowed only for the 'prerelease' SemVer identifier\n")
+			fmt.Fprintf(os.Stderr, "Error: 'prerelease' flag is allowed only with the 'prerelease' SemVer identifier\n")
 			os.Exit(c.ExitOtherErrors)
 		}
 		if semverID != "build" && newBuildID != "" {
-			fmt.Fprintf(os.Stderr, "Error: 'build' flag is allowed only for the 'build' SemVer identifier\n")
+			fmt.Fprintf(os.Stderr, "Error: 'build' flag is allowed only with the 'build' SemVer identifier\n")
 			os.Exit(c.ExitOtherErrors)
 		}
 		semVer, err := gosemver.BumpSemVer(semverID, version, newPrereleaseID, newBuildID)
