@@ -6,7 +6,8 @@ fully adhering to the [Semantic Versioning 2.0.0](https://semver.org) specificat
 [![Go Report Card](https://goreportcard.com/badge/github.com/andreygrechin/gosemver)](https://goreportcard.com/report/github.com/andreygrechin/gosemver)
 [![codecov](https://codecov.io/gh/andreygrechin/gosemver/graph/badge.svg?token=789FTQPOB0)](https://codecov.io/gh/andreygrechin/gosemver)
 [![Go Reference](https://pkg.go.dev/badge/github.com/andreygrechin/gosemver.svg)](https://pkg.go.dev/github.com/andreygrechin/gosemver)
-[![license](https://img.shields.io/github/license/andreygrechin/gosemver)](https://github.com/andreygrechin/gosemver/blob/main/LICENSE)
+[![license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/andreygrechin/gosemver/blob/main/licenses/LICENSE.MIT)
+[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/andreygrechin/gosemver/blob/main/licenses/LICENSE.Apache-2.0)
 
 ## Features
 
