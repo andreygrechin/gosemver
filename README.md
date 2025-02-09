@@ -131,7 +131,11 @@ $ gosemver bump release 1.2.3-beta.1
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+This project is licensed under both the MIT and the Apache 2.0 licenses — see the
+[LICENSE.Apache-2.0](licenses/LICENSE.Apache-2.0) and the [MIT License](licenses/LICENSE.MIT) files.
+Choose the most appropriate for your use case.
+
+`SPDX-License-Identifier: MIT OR Apache-2.0`
 
 ## Acknowledgments
 
