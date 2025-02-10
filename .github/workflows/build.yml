@@ -9,6 +9,7 @@ on:
       - "**/*.go"
       - go.*
       - Dockerfile
+      - .golangci.yaml
   pull_request:
     paths:
       - .github/workflows/*.yml
@@ -16,6 +17,7 @@ on:
       - go.*
       - Dockerfile
       - Makefile
+      - .golangci.yaml
 
 jobs:
   security:
@@ -49,3 +51,35 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+  lint:
+    permissions:
+      contents: read
+      checks: write
+    if: github.event.head_commit.message != '.'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ["1.23.x"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: go vet
+        run: go vet ./...
+
+      - uses: dominikh/staticcheck-action@v1.2.0
+        with:
+          install-go: false
+          version: latest
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.63.4
+          args: --show-stats
