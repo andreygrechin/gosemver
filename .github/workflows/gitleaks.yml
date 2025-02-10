@@ -4,9 +4,9 @@ name: gitleaks
 on:
   pull_request:
   push:
-  workflow_dispatch:
+    branches: ["main"]
   schedule:
-    - cron: 0 3 * * FRI
+    - cron: 45 21 * * FRI
 
 permissions:
   contents: read
