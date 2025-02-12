@@ -23,13 +23,14 @@ on:
 
 jobs:
   security:
+    if: ${{ github.event.head_commit.message != '.' }}
     uses: andreygrechin/github-actions/.github/workflows/security-scans.yml@main
 
   lint:
     permissions:
       contents: read
       pull-requests: read
-    if: github.event.head_commit.message != '.'
+    if: ${{ github.event.head_commit.message != '.' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -59,7 +60,7 @@ jobs:
           args: --show-stats
 
   build:
-    if: github.event.head_commit.message != '.'
+    if: ${{ github.event.head_commit.message != '.' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
