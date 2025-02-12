@@ -12,3 +12,27 @@ updates:
     labels:
       - dependencies
       - dependabot
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+      day: friday
+      time: 21:45
+    labels:
+      - dependencies
+      - dependabot
+    commit-message:
+      prefix: chore
+      include: scope
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+      day: friday
+      time: 21:45
+    labels:
+      - dependencies
+      - dependabot
+    commit-message:
+      prefix: chore
+      include: scope
