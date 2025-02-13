@@ -31,7 +31,7 @@ go install github.com/andreygrechin/gosemver@latest
 You may also install the latest version of `gosemver` using the Homebrew tap:
 
 ```shell
-brew install andreygrechin/homebrew-tap/gosemver
+brew install andreygrechin/tap/gosemver
 
 # to update, run
 brew update
@@ -132,7 +132,7 @@ $ gosemver bump release 1.2.3-beta.1
 
 ## License
 
-This project is licensed under both the MIT and the Apache 2.0 licenses — see the
+This project can be licensed under MIT or the Apache 2.0 licenses — see the
 [LICENSE.Apache-2.0](licenses/LICENSE.Apache-2.0) and the [MIT License](licenses/LICENSE.MIT) files.
 Choose the most appropriate for your use case.
 
