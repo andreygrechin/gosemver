@@ -1,39 +1,60 @@
-# yaml-language-server: $schema=https://golangci-lint.run/jsonschema/golangci.jsonschema.json
+---
+version: "2"
 linters:
-  enable-all: true
+  default: all
   disable:
-    - forbidigo
     - depguard
-    - varnamelen
     - exhaustruct
+    - forbidigo
     - gochecknoglobals
-    - exportloopref # Deprecated
-
-linters-settings:
-  paralleltest:
-    ignore-missing: true
-    ignore-missing-subtests: true
-issues:
-  exclude-rules:
-    - linters:
-        - wsl
-      text: return statements should not be cuddled if block has more than two lines
-    - path: _test\.go
-      linters:
-        - lll
-        - funlen
-    - linters:
-        - revive
-      text: "unused-parameter: parameter 'cmd' seems to be unused"
-    - linters:
-        - revive
-      text: "unused-parameter: parameter 'args' seems to be unused"
-    - linters:
-        - perfsprint
-      text: fmt.Sprintf can be replaced with string concatenation
-    - linters:
-        - nlreturn
-      text: return with no blank line before
-    - path: cmd\/
-      linters:
-        - gochecknoinits
+    - varnamelen
+  settings:
+    paralleltest:
+      ignore-missing: true
+      ignore-missing-subtests: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - wsl
+        text: return statements should not be cuddled if block has more than two lines
+      - linters:
+          - funlen
+          - lll
+        path: _test\.go
+      - linters:
+          - revive
+        text: 'unused-parameter: parameter ''cmd'' seems to be unused'
+      - linters:
+          - revive
+        text: 'unused-parameter: parameter ''args'' seems to be unused'
+      - linters:
+          - perfsprint
+        text: fmt.Sprintf can be replaced with string concatenation
+      - linters:
+          - nlreturn
+        text: return with no blank line before
+      - linters:
+          - gochecknoinits
+        path: cmd\/
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
