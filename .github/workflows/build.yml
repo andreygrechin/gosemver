@@ -46,7 +46,7 @@ jobs:
       - name: go vet
         run: go vet ./...
 
-      - uses: dominikh/staticcheck-action@v1.2.0
+      - uses: dominikh/staticcheck-action@v1
         with:
           install-go: false
           version: latest
