@@ -1,5 +1,4 @@
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-
+---
 version: 2
 
 project_name: gosemver
@@ -193,6 +192,6 @@ release:
   draft: true
   make_latest: false
   replace_existing_draft: true
-  name_template: "v{{ .Version }}"
+  name_template: "gosemver v{{ .Version }}"
   footer: |
     **Full Changelog**: https://github.com/andreygrechin/gosemver/compare/{{ .PreviousTag }}...{{ .Tag }}
