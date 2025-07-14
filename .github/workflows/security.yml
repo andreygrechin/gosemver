@@ -7,4 +7,4 @@ on:
 
 jobs:
   security-scans:
-    uses: andreygrechin/github-actions/.github/workflows/security-scans.yml@main
+    uses: andreygrechin/github-actions/.github/workflows/golang-security.yml@main
