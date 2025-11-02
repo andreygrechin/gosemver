@@ -103,12 +103,14 @@ func TestCompareSemVer(t *testing.T) {
 
 				t.Errorf("CompareSemVer(%s, %s) = %v, want %v", tt.v1, tt.v2, got, tt.wantErr)
 				fmt.Println(err)
+
 				return
 			}
 
 			reverse, err := gosemver.CompareSemVer(tt.v2, tt.v1)
 			if err != nil {
 				t.Errorf("CompareSemVer() error = %v", err)
+
 				return
 			}
 

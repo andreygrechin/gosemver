@@ -8,16 +8,23 @@ run:
 
 linters:
   default: all
+  enable:
+    - wsl_v5
   disable:
     - depguard
     - exhaustruct
     - forbidigo
     - gochecknoglobals
     - varnamelen
+    - wsl
   settings:
     paralleltest:
       ignore-missing: true
       ignore-missing-subtests: true
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
   exclusions:
     generated: lax
     presets:
@@ -26,9 +33,9 @@ linters:
       - legacy
       - std-error-handling
     rules:
-      - linters:
-          - wsl
-        text: return statements should not be cuddled if block has more than two lines
+      # - linters:
+      #     - wsl
+      #   text: return statements should not be cuddled if block has more than two lines
       - linters:
           - funlen
           - lll
