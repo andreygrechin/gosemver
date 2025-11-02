@@ -16,8 +16,10 @@ func bumpExistingNumeric(existing string) string {
 	if numeric != "" {
 		oldNum, _ := strconv.Atoi(numeric)
 		oldNum++
+
 		return fmt.Sprintf("%s%d", prefix, oldNum)
 	}
+
 	// if there's no numeric part, append "1"
 	return fmt.Sprintf("%s1", prefix)
 }
@@ -37,9 +39,9 @@ func splitNumericSuffix(prerelease string) (string, string) {
 	}
 
 	if idx == len(prerelease)-1 {
-		// no trailing digits
-		return prerelease, ""
+		return prerelease, "" // no trailing digits
 	}
+
 	return prerelease[:idx+1], prerelease[idx+1:]
 }
 

@@ -68,7 +68,7 @@ func TestExitCodes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command(binaryPath)
+			cmd := exec.Command(binaryPath) //nolint:noctx
 
 			cmd.Env = append(os.Environ(),
 				"BE_CRASHER=1",

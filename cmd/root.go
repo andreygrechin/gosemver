@@ -21,7 +21,8 @@ See also:
 }
 
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	err := rootCmd.Execute()
+	if err != nil {
 		var exitError *exec.ExitError
 
 		fmt.Printf("error: %v\n", err)
